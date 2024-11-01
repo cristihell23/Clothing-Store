@@ -37,6 +37,33 @@ def get_all_products(connection):
 
     return response
 
+def insert_new_product(connection,product):
+    cursor = connection.cursor()
+    query = ("INSERT INTO products (product_name, uom_id, product_size_id, product_color_id, price_per_item) VALUES (%s, %s,%s,%s,%s)")
+    data = (product['product_name'], product['uom_id'], product['product_size_id'], product['product_color_id'], product['price_per_item'])
+    cursor.execute(query,data)
+    connection.commit()
+
+    return cursor.lastrowid
+
+def delete_product(connection,product_id):
+    cursor = connection.cursor()
+    query = ("DELETE FROM products WHERE product_id =" + str(product_id))
+    cursor.execute(query)
+    connection.commit()
+
+    return cursor.lastrowid
+
 if __name__ == '__main__':
     connection = get_sql_connection()
     print(get_all_products(connection))
+
+    """print(insert_new_product(connection, {
+        'product_name' : 'Hoodie',
+        'uom_id' : '1',
+        'product_size_id' : '4',
+        'product_color_id' : '4',
+        'price_per_item' : '22.50'
+    }))""" # To be used for manual insertion.
+
+    #print(delete_product(connection,5)) - This is to test product delete function
